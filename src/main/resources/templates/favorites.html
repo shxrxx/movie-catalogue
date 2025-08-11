@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Favorites</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<main class="container">
+    <h1>Your Favorites</h1>
+
+    <div th:if="${#lists.isEmpty(favorites)}">
+        <p>You have no favorites yet. Add some from the main page!</p>
+    </div>
+
+    <div class="grid" th:if="${!#lists.isEmpty(favorites)}">
+        <div class="card" th:each="f : ${favorites}">
+            <div class="poster">
+                <img th:if="${f.posterPath != null}" th:src="${imageBaseUrl + f.posterPath}" th:alt="${f.title}" />
+                <div th:if="${f.posterPath == null}" class="no-poster">No poster</div>
+            </div>
+
+            <div class="card-body">
+                <h3 th:text="${f.title}">Title</h3>
+                <p class="meta">
+                    <span th:text="${f.releaseDate}">Date</span>
+                    <span th:text="'★ ' + ${f.rating}">Rating</span>
+                </p>
+
+                <div class="actions">
+                    <a th:href="@{/movie/{id}(id=${f.tmdbId})}" class="btn">Details</a>
+
+                    <form th:action="@{/favorites/remove/{id}(id=${f.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

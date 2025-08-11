@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Movies - Trending / Search</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<main class="container">
+    <h1 th:text="${q} == null ? 'Trending Movies' : 'Search results for: ' + ${q}"></h1>
+
+    <div class="grid">
+        <div class="card" th:each="movie : ${movies}">
+            <div class="poster">
+                <img th:if="${movie.posterPath != null}" th:src="${imageBaseUrl + movie.posterPath}" th:alt="${movie.title}" />
+                <div th:if="${movie.posterPath == null}" class="no-poster">No poster</div>
+            </div>
+
+            <div class="card-body">
+                <h3 th:text="${movie.title}">Title</h3>
+                <p class="meta">
+                    <span th:text="${movie.releaseDate}">Date</span>
+                    <span th:text="'★ ' + ${movie.voteAverage}">Rating</span>
+                </p>
+
+                <div class="actions">
+                    <a th:href="@{/movie/{id}(id=${movie.id})}" class="btn">Details</a>
+
+                    <form th:if="${favoriteIds.contains(movie.id)}" action="/favorites/remove" method="post" style="display:inline;">
+                        <input type="hidden" name="tmdbId" th:value="${movie.id}" />
+                        <button type="submit" class="btn btn-danger">Remove Favorite</button>
+                    </form>
+
+                    <form th:if="${!favoriteIds.contains(movie.id)}" action="/favorites/add" method="post" style="display:inline;">
+                        <input type="hidden" name="tmdbId" th:value="${movie.id}" />
+                        <button type="submit" class="btn">Add Favorite</button>
+                    </form>
+                </div>
+            </div>
+        </div> <!-- card -->
+    </div> <!-- grid -->
+</main>
+</body>
+</html>

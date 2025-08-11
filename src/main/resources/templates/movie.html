@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${movie.title} + ' - Details'">Movie Details</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<main class="container detail">
+    <div class="left">
+        <img th:if="${movie.posterPath != null}" th:src="${imageBaseUrl + movie.posterPath}" th:alt="${movie.title}" />
+    </div>
+    <div class="right">
+        <h1 th:text="${movie.title}">Title</h1>
+        <p class="meta">
+            <span th:text="${movie.releaseDate}">Release</span>
+            <span th:text="'★ ' + ${movie.voteAverage}">Rating</span>
+        </p>
+        <p th:text="${movie.overview}">Overview</p>
+
+        <div class="actions">
+            <form th:if="${isFavorite}" action="/favorites/remove" method="post" style="display:inline;">
+                <input type="hidden" name="tmdbId" th:value="${movie.id}" />
+                <button type="submit" class="btn btn-danger">Remove Favorite</button>
+            </form>
+            <form th:if="${!isFavorite}" action="/favorites/add" method="post" style="display:inline;">
+                <input type="hidden" name="tmdbId" th:value="${movie.id}" />
+                <button type="submit" class="btn">Add Favorite</button>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>
